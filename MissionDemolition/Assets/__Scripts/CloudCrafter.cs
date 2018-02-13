@@ -11,11 +11,10 @@ public class CloudCrafter : MonoBehaviour {
 
 	private GameObject[] cloudInstances;
 
-	// Use this for initialization
-	void Start () {
+	void Awake () {
 		cloudInstances = new GameObject[numClouds];
 
-		GameObject anchor = GameObject.Find("CloudAchor");
+		GameObject anchor = GameObject.Find("Cloud Anchor");
 
 		GameObject cloud;
 		for (int i = 0; i < numClouds; i++) {
