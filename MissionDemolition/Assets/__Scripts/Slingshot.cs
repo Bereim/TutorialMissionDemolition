@@ -15,12 +15,15 @@ public class Slingshot : MonoBehaviour {
 	public GameObject projectile;
 	public bool aimingMode;
 
+	private bool canFire;
 	private Rigidbody projectileRigidbody;
 
-    static public Vector3 LAUNCH_POS
-    {
-        get
-        {
+	private void CanFireSetTrue() {
+		canFire = true;
+	}
+
+    static public Vector3 LAUNCH_POS {
+        get {
             if (S == null) return Vector3.zero;
             else return S.launchPos;
         }
@@ -28,6 +31,7 @@ public class Slingshot : MonoBehaviour {
 
 	private void Awake() {
         S = this;
+		canFire = true;
         Transform launchPointTrans = transform.Find("LaunchPoint");
 		launchPoint = launchPointTrans.gameObject;
 		launchPoint.SetActive(false);
@@ -36,7 +40,7 @@ public class Slingshot : MonoBehaviour {
 
 	private void OnMouseEnter() {
 		//print("Slingshot:OnMouseEnter()");
-		launchPoint.SetActive(true);
+		if (canFire) launchPoint.SetActive(true);
 	}
 
 	private void OnMouseExit() {
@@ -45,12 +49,16 @@ public class Slingshot : MonoBehaviour {
 	}
 
 	private void OnMouseDown() {
+		if (!canFire) return;
+
 		aimingMode = true;
 		projectile = Instantiate(prefabProjectile) as GameObject;
 		projectile.transform.position = launchPos;
 		projectileRigidbody = projectile.GetComponent<Rigidbody>();
 		projectileRigidbody.isKinematic = true;
 	}
+
+
 
 	private void Update() {
 		if (!aimingMode) return;
@@ -75,6 +83,10 @@ public class Slingshot : MonoBehaviour {
 			projectileRigidbody.velocity = -mouseDelta * velocityMult;
 			FollowCam.POI = projectile;
 			projectile = null;
+			MissionDemolition.ShotFired();
+			ProjectileLine.S.poi = projectile;
+			canFire = false;
+			Invoke("CanFireSetTrue", 2f);
 		}
 	}
 }
