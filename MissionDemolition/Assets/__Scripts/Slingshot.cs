@@ -86,7 +86,7 @@ public class Slingshot : MonoBehaviour {
 			MissionDemolition.ShotFired();
 			ProjectileLine.S.poi = projectile;
 			canFire = false;
-			Invoke("CanFireSetTrue", 2f);
+			Invoke("CanFireSetTrue", 3f);
 		}
 	}
 }
